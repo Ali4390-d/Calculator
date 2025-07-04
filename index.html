@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        .bubble:nth-child(1) {
+            width: 40px;
+            height: 40px;
+            left: 10%;
+            animation-duration: 8s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 20px;
+            height: 20px;
+            left: 20%;
+            animation-duration: 5s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 50px;
+            height: 50px;
+            left: 35%;
+            animation-duration: 7s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            left: 50%;
+            animation-duration: 11s;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 35px;
+            height: 35px;
+            left: 55%;
+            animation-duration: 6s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 45px;
+            height: 45px;
+            left: 65%;
+            animation-duration: 8s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(7) {
+            width: 25px;
+            height: 25px;
+            left: 75%;
+            animation-duration: 7s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(8) {
+            width: 80px;
+            height: 80px;
+            left: 80%;
+            animation-duration: 6s;
+            animation-delay: 1s;
+        }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(100px);
+            }
+            100% {
+                bottom: 1080px;
+                transform: translateX(-200px);
+            }
+        }
+
+        .calculator {
+            position: relative;
+            z-index: 1;
+            width: 320px;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .calculator:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+        }
+
+        .calculator::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent,
+                transparent,
+                transparent,
+                rgba(0, 255, 255, 0.1)
+            );
+            transform: rotate(30deg);
+            z-index: -1;
+            animation: shine 6s infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% {
+                transform: rotate(30deg) translate(-10%, -10%);
+            }
+            50% {
+                transform: rotate(30deg) translate(10%, 10%);
+            }
+        }
+
+        .display {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 2.5rem;
+            text-align: right;
+            color: #00ffff;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 15px;
+        }
+
+        button {
+            height: 60px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 10px;
+            background: rgba(30, 30, 30, 0.8);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        button:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: #00ffff;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .operator {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .equals {
+            background: rgba(0, 180, 180, 0.3);
+            grid-column: span 2;
+        }
+
+        .clear, .delete {
+            color: #ff5555;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="calculator">
+        <input type="text" class="display" id="display" readonly>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="delete" onclick="deleteLastChar()">⌫</button>
+            <button class="operator" onclick="appendToDisplay('%')">%</button>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
+            
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="equals" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Calculator ✨
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        
+        function appendToDisplay(value) {
+            display.value += value;
+            animateButton(event.target);
+        }
+        
+        function clearDisplay() {
+            display.value = '';
+            animateButton(event.target);
+        }
+        
+        function deleteLastChar() {
+            display.value = display.value.slice(0, -1);
+            animateButton(event.target);
+        }
+        
+        function calculate() {
+            try {
+                let expression = display.value;
+                // Replace × with * for evaluation
+                expression = expression.replace(/×/g, '*');
+                // Handle percentage calculations
+                expression = expression.replace(/(\d+)%/g, '($1/100)');
+                
+                const result = eval(expression);
+                display.value = result;
+                animateButton(event.target, true);
+                
+                // Create floating result animation
+                createResultAnimation(result);
+            } catch (error) {
+                display.value = 'Error';
+                // Error animation
+                display.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    display.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        function animateButton(button, isEquals = false) {
+            button.style.transform = 'scale(0.95)';
+            if (isEquals) {
+                button.style.boxShadow = '0 0 20px rgba(0, 255, 255, 0.5)';
+                button.style.backgroundColor = 'rgba(0, 200, 200, 0.5)';
+            }
+            setTimeout(() => {
+                button.style.transform = '';
+                button.style.boxShadow = '';
+                button.style.backgroundColor = '';
+            }, 150);
+        }
+        
+        function createResultAnimation(result) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * 80 + 10 + '%';
+            bubble.style.width = '60px';
+            bubble.style.height = '60px';
+            bubble.style.animationDuration = Math.random() * 5 + 3 + 's';
+            
+            // Add the result text inside the bubble
+            bubble.innerHTML = `<span style="
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: rgba(0, 255, 255, 0.8);
+                font-size: 0.8rem;
+                font-weight: bold;
+            ">${result}</span>`;
+            
+            document.querySelector('.bubbles').appendChild(bubble);
+            
+            // Remove the bubble after animation completes
+            setTimeout(() => {
+                bubble.remove();
+            }, 15000);
+        }
+        
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            
+            if (/[0-9\.\+\-\*\/%]/.test(key)) {
+                appendToDisplay(key);
+            } else if (key === 'Enter') {
+                calculate();
+            } else if (key === 'Backspace') {
+                deleteLastChar();
+            } else if (key === 'Escape') {
+                clearDisplay();
+            } else if (key === '(' || key === ')') {
+                appendToDisplay(key);
+            }
+        });
+    </script>
+</body>
+</html>
